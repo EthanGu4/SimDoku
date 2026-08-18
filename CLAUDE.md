@@ -59,7 +59,7 @@ Tracks actual implementation state — update as phases land. This section is th
 
 - [x] **Phase 0 — Foundations.** Monorepo skeleton, tooling, CI.
 - [x] **Phase 1 — Core visualization engine + first algorithm.** `Board`/`SolveStep`/`SolveResult` schemas, `SolverStrategy` registry, backtracking solver, `POST /solve/{algorithm}`, generic `<SolveVisualizer>`.
-- [ ] **Phase 2 — Algorithm plug-in expansion.** 2–4 more classical solvers (e.g. constraint propagation, Dancing Links, simulated annealing), one at a time.
+- [ ] **Phase 2 — Algorithm plug-in expansion.** 2–4 more classical solvers (e.g. constraint propagation, Dancing Links, simulated annealing), one at a time. *(in progress — constraint propagation added)*
 - [ ] **Phase 3 — Benchmark harness & "race mode".** Fixed puzzle dataset, timing/feature persistence, side-by-side multi-algorithm UI.
 - [ ] **Phase 4 — ML: photo board detection.** Image upload → CV pipeline → board JSON → existing solve flow.
 - [ ] **Phase 5 — ML: unconventional solving methods.** ML solver(s) behind the standard `SolverStrategy` interface.
