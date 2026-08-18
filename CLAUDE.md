@@ -57,8 +57,8 @@ CI (GitHub Actions) runs lint + test on push to main. No deploy pipeline, enviro
 
 Tracks actual implementation state — update as phases land. This section is the source of truth for "what exists right now," not the aspirational description above.
 
-- [ ] **Phase 0 — Foundations.** Monorepo skeleton, tooling, CI. *(in progress)*
-- [ ] **Phase 1 — Core visualization engine + first algorithm.** `Board`/`SolveStep`/`SolveResult` schemas, `SolverStrategy` registry, backtracking solver, `POST /solve/{algorithm}`, generic `<SolveVisualizer>`.
+- [x] **Phase 0 — Foundations.** Monorepo skeleton, tooling, CI.
+- [x] **Phase 1 — Core visualization engine + first algorithm.** `Board`/`SolveStep`/`SolveResult` schemas, `SolverStrategy` registry, backtracking solver, `POST /solve/{algorithm}`, generic `<SolveVisualizer>`.
 - [ ] **Phase 2 — Algorithm plug-in expansion.** 2–4 more classical solvers (e.g. constraint propagation, Dancing Links, simulated annealing), one at a time.
 - [ ] **Phase 3 — Benchmark harness & "race mode".** Fixed puzzle dataset, timing/feature persistence, side-by-side multi-algorithm UI.
 - [ ] **Phase 4 — ML: photo board detection.** Image upload → CV pipeline → board JSON → existing solve flow.

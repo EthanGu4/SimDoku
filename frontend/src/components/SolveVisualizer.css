@@ -1,0 +1,31 @@
+.solve-visualizer {
+  padding: 24px 20px 40px;
+}
+
+.solve-stats {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  width: min(450px, 90vw);
+  margin: 20px auto 0;
+  font-size: 14px;
+}
+
+.solve-stats div {
+  text-align: center;
+}
+
+.solve-stats dt {
+  color: var(--text);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.solve-stats dd {
+  margin: 2px 0 0;
+  color: var(--text-h);
+  font-family: var(--mono);
+  font-weight: 600;
+}

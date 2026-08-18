@@ -4,6 +4,10 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .ruff_cache/
+backend/openapi.json
+
+# Node (root dev tooling)
+node_modules/
 
 # Editor / OS
 .vscode/

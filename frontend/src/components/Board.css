@@ -1,0 +1,42 @@
+.sudoku-board {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  width: min(450px, 90vw);
+  aspect-ratio: 1;
+  border: 2px solid var(--text-h);
+  background: var(--bg);
+  margin: 0 auto;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: clamp(16px, 3.2vw, 22px);
+  border: 1px solid var(--border);
+  color: var(--text-h);
+  transition: background-color 0.15s;
+}
+
+.cell.given {
+  font-weight: 600;
+}
+
+.cell.solved {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.cell.active {
+  background: var(--accent-bg);
+}
+
+.cell.border-right-thick {
+  border-right: 2px solid var(--text-h);
+}
+
+.cell.border-bottom-thick {
+  border-bottom: 2px solid var(--text-h);
+}
