@@ -1,13 +1,17 @@
-import type { BoardCells } from "../playback/types";
+import { stepKind } from "../playback/describeStep";
+import type { BoardCells, SolveStep } from "../playback/types";
 import "./Board.css";
 
 interface BoardProps {
   cells: BoardCells;
   givenCells: BoardCells;
-  activeCell?: number[] | null;
+  lastStep?: SolveStep | null;
 }
 
-export function Board({ cells, givenCells, activeCell }: BoardProps) {
+export function Board({ cells, givenCells, lastStep }: BoardProps) {
+  const activeCell = lastStep?.cell ?? null;
+  const activeKind = stepKind(lastStep ?? null);
+
   return (
     <div className="sudoku-board" role="grid" aria-label="Sudoku board">
       {cells.map((row, rowIndex) =>
@@ -18,7 +22,7 @@ export function Board({ cells, givenCells, activeCell }: BoardProps) {
           const classes = [
             "cell",
             value === 0 ? "empty" : isGiven ? "given" : "solved",
-            isActive ? "active" : "",
+            isActive && activeKind ? `active-${activeKind}` : "",
             colIndex % 3 === 2 && colIndex !== 8 ? "border-right-thick" : "",
             rowIndex % 3 === 2 && rowIndex !== 8 ? "border-bottom-thick" : "",
           ]

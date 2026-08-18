@@ -73,3 +73,18 @@ def test_given_cells_are_never_overwritten() -> None:
             given = EASY[row][col]
             if given != 0:
                 assert result.solved_board.cells[row][col] == given
+
+
+def test_trace_shows_every_digit_tried_including_rejects() -> None:
+    """The visualizer's whole point is showing trial-and-error, not just
+    successful placements — a sparse puzzle like HARD should genuinely
+    exercise rejects and backtracks, not just clean forward fills."""
+    result = BacktrackingSolver().solve(Board(cells=HARD))
+
+    place_steps = [s for s in result.steps if s.action == "place"]
+    assert any(s.reasoning == "reject" for s in place_steps)
+    assert any(s.reasoning == "search" for s in place_steps)
+
+    remove_steps = [s for s in result.steps if s.action == "remove"]
+    assert any(s.reasoning is None for s in remove_steps)  # undoing an instant reject
+    assert any(s.reasoning == "backtrack" for s in remove_steps)  # undoing a real dead end

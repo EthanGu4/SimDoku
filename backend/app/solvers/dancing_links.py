@@ -155,12 +155,16 @@ class _DLXMatrix:
                 self.cover(right.column)
                 right = right.right
 
-            steps.append(SolveStep(action="place", cell=(row, col), value=value))
+            steps.append(
+                SolveStep(action="place", cell=(row, col), value=value, reasoning="search")
+            )
 
             if self.search(steps):
                 return True
 
-            steps.append(SolveStep(action="remove", cell=(row, col), value=value))
+            steps.append(
+                SolveStep(action="remove", cell=(row, col), value=value, reasoning="backtrack")
+            )
 
             left = node.left
             while left is not node:

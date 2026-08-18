@@ -42,7 +42,14 @@ export function PuzzleGridInput({ cells, onChange }: PuzzleGridInputProps) {
       e.preventDefault();
       setCell(row, col, Number(e.key));
       focusCell(col + 1 > 8 ? row + 1 : row, col + 1 > 8 ? 0 : col + 1);
-    } else if (e.key === "0" || e.key === "Backspace" || e.key === "Delete") {
+    } else if (e.key === "0") {
+      // Treated like a digit (advances focus) so a blank puzzle can be
+      // typed out cell-by-cell, not just pasted as a whole string.
+      e.preventDefault();
+      setCell(row, col, 0);
+      focusCell(col + 1 > 8 ? row + 1 : row, col + 1 > 8 ? 0 : col + 1);
+    } else if (e.key === "Backspace" || e.key === "Delete") {
+      // Corrects the current cell in place — deliberately doesn't advance.
       e.preventDefault();
       setCell(row, col, 0);
     } else if (e.key === "ArrowRight") {

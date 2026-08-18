@@ -2,7 +2,12 @@
 MRV-ordered backtracking search only for whatever a puzzle's logic can't
 resolve on its own. Unlike plain backtracking, most cells get filled by
 deduction rather than trial and error — a genuinely different algorithm,
-not just a tuned version of the first one."""
+not just a tuned version of the first one.
+
+Where it does fall back to search, the trace shows every digit 1-9 tried
+at a cell (including instant rejects), same as the backtracking solver —
+so the two are visibly comparable on the cells where this one also has to
+guess."""
 
 import time
 
@@ -74,18 +79,32 @@ class ConstraintPropagationSolver:
             self._undo(cells, steps, placed)
             return False
         row, col, candidates = target
+        valid_values = set(candidates)
 
-        for value in candidates:
+        for value in range(1, 10):
+            is_valid = value in valid_values
             cells[row][col] = value
             steps.append(
-                SolveStep(action="place", cell=(row, col), value=value, reasoning="search")
+                SolveStep(
+                    action="place",
+                    cell=(row, col),
+                    value=value,
+                    reasoning="search" if is_valid else "reject",
+                )
             )
 
-            if self._solve(cells, steps):
+            if is_valid and self._solve(cells, steps):
                 return True
 
             cells[row][col] = 0
-            steps.append(SolveStep(action="remove", cell=(row, col), value=value))
+            steps.append(
+                SolveStep(
+                    action="remove",
+                    cell=(row, col),
+                    value=value,
+                    reasoning="backtrack" if is_valid else None,
+                )
+            )
 
         # This frame's own propagation may have placed cells before the guess
         # loop ran (or before a contradiction was found) — undo those too, or

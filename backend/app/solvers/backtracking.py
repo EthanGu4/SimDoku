@@ -2,7 +2,12 @@
 at each step, branch on the empty cell with the fewest legal candidates.
 This is still brute-force search (no constraint propagation/elimination
 across cells) — just a cheap ordering choice that keeps worst-case puzzles
-tractable."""
+tractable.
+
+The trace shows every digit 1-9 tried at each cell, not just the ones that
+survive a pre-filter — including ones instantly rejected for conflicting
+with a peer — so the visualizer can show the algorithm's actual trial-and-
+error, not just its successful placements."""
 
 import time
 
@@ -40,16 +45,32 @@ class BacktrackingSolver:
         if target is None:
             return True
         row, col, candidates = target
+        valid_values = set(candidates)
 
-        for value in candidates:
+        for value in range(1, 10):
+            is_valid = value in valid_values
             cells[row][col] = value
-            steps.append(SolveStep(action="place", cell=(row, col), value=value))
+            steps.append(
+                SolveStep(
+                    action="place",
+                    cell=(row, col),
+                    value=value,
+                    reasoning="search" if is_valid else "reject",
+                )
+            )
 
-            if self._backtrack(cells, steps):
+            if is_valid and self._backtrack(cells, steps):
                 return True
 
             cells[row][col] = 0
-            steps.append(SolveStep(action="remove", cell=(row, col), value=value))
+            steps.append(
+                SolveStep(
+                    action="remove",
+                    cell=(row, col),
+                    value=value,
+                    reasoning="backtrack" if is_valid else None,
+                )
+            )
 
         return False
 

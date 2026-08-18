@@ -42,6 +42,17 @@ def test_given_cells_are_never_overwritten() -> None:
                 assert result.solved_board.cells[row][col] == given
 
 
+def test_search_fallback_shows_every_digit_tried_including_rejects() -> None:
+    """HARD is sparse enough that deduction alone can't finish it — the
+    search fallback should show the same trial-and-error trace shape as
+    the backtracking solver, not silently skip rejected digits."""
+    result = ConstraintPropagationSolver().solve(Board(cells=HARD))
+
+    place_steps = [s for s in result.steps if s.action == "place"]
+    assert any(s.reasoning == "reject" for s in place_steps)
+    assert any(s.reasoning == "search" for s in place_steps)
+
+
 def test_agrees_with_backtracking_on_the_unique_solution() -> None:
     from app.solvers.backtracking import BacktrackingSolver
 

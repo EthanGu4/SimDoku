@@ -1,4 +1,5 @@
 import { applySteps } from "../playback/applySteps";
+import { describeStep } from "../playback/describeStep";
 import type { BoardCells, SolveResult } from "../playback/types";
 import { usePlayback } from "../playback/usePlayback";
 import { Board } from "./Board";
@@ -19,7 +20,8 @@ export function SolveVisualizer({ initialCells, result }: SolveVisualizerProps) 
 
   return (
     <section className="solve-visualizer">
-      <Board cells={cells} givenCells={initialCells} activeCell={lastStep?.cell ?? null} />
+      <Board cells={cells} givenCells={initialCells} lastStep={lastStep} />
+      <p className="step-narration">{describeStep(lastStep)}</p>
       <PlaybackControls state={state} dispatch={dispatch} />
       <dl className="solve-stats">
         <div>
