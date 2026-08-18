@@ -9,6 +9,30 @@
   font-size: 14px;
 }
 
+#view-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 18px;
+}
+
+#view-tabs button {
+  font-family: var(--sans);
+  font-size: 13px;
+  padding: 6px 16px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+#view-tabs button.active {
+  border-color: var(--accent-border);
+  color: var(--accent);
+  font-weight: 600;
+}
+
 #puzzle-input {
   width: min(450px, 90vw);
   margin: 28px auto 0;
@@ -61,7 +85,7 @@
 }
 
 .error {
-  color: #c0392b;
+  color: var(--danger);
   font-size: 13px;
   text-align: left;
   margin: 0;

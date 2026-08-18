@@ -1,32 +1,11 @@
 from app.core import Board, SolveStep, is_complete, is_valid_board
+from app.core.puzzles import EASY_CELLS, HARD_CELLS
 from app.solvers.backtracking import BacktrackingSolver
 
-# 0 = empty. Known-solvable puzzles of increasing difficulty.
-EASY = [
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [6, 0, 0, 1, 9, 5, 0, 0, 0],
-    [0, 9, 8, 0, 0, 0, 0, 6, 0],
-    [8, 0, 0, 0, 6, 0, 0, 0, 3],
-    [4, 0, 0, 8, 0, 3, 0, 0, 1],
-    [7, 0, 0, 0, 2, 0, 0, 0, 6],
-    [0, 6, 0, 0, 0, 0, 2, 8, 0],
-    [0, 0, 0, 4, 1, 9, 0, 0, 5],
-    [0, 0, 0, 0, 8, 0, 0, 7, 9],
-]
-
-# A well-known "hard" 24-clue puzzle (not a pathological worst case, but
-# sparse enough to exercise real backtracking).
-HARD = [
-    [0, 0, 0, 0, 0, 0, 0, 1, 2],
-    [0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [0, 0, 2, 3, 0, 0, 4, 0, 0],
-    [0, 0, 1, 8, 0, 0, 0, 0, 5],
-    [0, 6, 0, 0, 7, 0, 8, 0, 0],
-    [0, 0, 0, 0, 0, 9, 0, 0, 0],
-    [0, 0, 8, 5, 0, 0, 0, 0, 0],
-    [9, 0, 0, 0, 4, 0, 5, 0, 0],
-    [4, 7, 0, 0, 0, 6, 0, 0, 0],
-]
+# 0 = empty. Sourced from the fixed benchmark dataset (app/core/puzzles.py)
+# so tests and the benchmark harness agree on what "easy"/"hard" mean.
+EASY = EASY_CELLS
+HARD = HARD_CELLS
 
 
 def apply_steps(initial_cells: list[list[int]], steps: list[SolveStep]) -> list[list[int]]:

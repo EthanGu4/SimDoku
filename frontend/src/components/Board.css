@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   grid-template-rows: repeat(9, 1fr);
-  width: min(450px, 90vw);
+  width: var(--board-size, min(450px, 90vw));
   aspect-ratio: 1;
   border: 1px solid var(--text-h);
   background: var(--bg);
@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--mono);
-  font-size: clamp(16px, 3.2vw, 22px);
+  font-size: clamp(11px, calc(var(--board-size, 450px) / 22), 22px);
   border: 1px solid var(--border);
   color: var(--text-h);
   transition: background-color 0.15s;

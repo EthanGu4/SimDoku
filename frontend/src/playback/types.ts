@@ -1,4 +1,4 @@
-import type { paths } from "../api/schema";
+import type { components, paths } from "../api/schema";
 
 type GeneratedResult =
   paths["/solve/{algorithm}"]["post"]["responses"][200]["content"]["application/json"];
@@ -10,3 +10,6 @@ export type SolveStep = Omit<GeneratedResult["steps"][number], "cell"> & { cell:
 export type SolveResult = Omit<GeneratedResult, "steps"> & { steps: SolveStep[] };
 export type SolveStats = GeneratedResult["stats"];
 export type BoardCells = number[][];
+
+export type BenchmarkPuzzle = components["schemas"]["BenchmarkPuzzle"];
+export type BenchmarkRun = components["schemas"]["BenchmarkRun"];

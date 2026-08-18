@@ -38,6 +38,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/puzzles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Puzzles */
+        get: operations["list_puzzles_puzzles_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/benchmark/{algorithm}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Run Benchmark */
+        post: operations["run_benchmark_benchmark__algorithm__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/benchmark/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Benchmark History */
+        get: operations["benchmark_history_benchmark_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -59,6 +110,43 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** BenchmarkPuzzle */
+        BenchmarkPuzzle: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Difficulty
+             * @enum {string}
+             */
+            difficulty: "easy" | "medium" | "hard";
+            board: components["schemas"]["Board"];
+            /** Given Count */
+            given_count: number;
+        };
+        /** BenchmarkRequest */
+        BenchmarkRequest: {
+            /** Puzzle Id */
+            puzzle_id: string;
+        };
+        /** BenchmarkRun */
+        BenchmarkRun: {
+            /** Puzzle Id */
+            puzzle_id: string;
+            /** Algorithm */
+            algorithm: string;
+            /** Solved */
+            solved: boolean;
+            /** Elapsed Time */
+            elapsed_time: number;
+            /** Step Count */
+            step_count: number;
+            /** Given Count */
+            given_count: number;
+            /** Created At */
+            created_at: string;
+        };
         /**
          * Board
          * @description A 9x9 Sudoku grid. 0 marks an empty cell.
@@ -199,6 +287,92 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SolveResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_puzzles_puzzles_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BenchmarkPuzzle"][];
+                };
+            };
+        };
+    };
+    run_benchmark_benchmark__algorithm__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                algorithm: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BenchmarkRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SolveResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    benchmark_history_benchmark_history_get: {
+        parameters: {
+            query?: {
+                puzzle_id?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BenchmarkRun"][];
                 };
             };
             /** @description Validation Error */
