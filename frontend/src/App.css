@@ -1,87 +1,67 @@
 #app-header {
-  padding: 40px 20px 8px;
+  padding: 32px 20px 4px;
   text-align: center;
 }
 
-#app-header h1 {
-  margin-bottom: 8px;
-}
-
 #app-header p {
+  margin-top: 6px;
   color: var(--text);
+  font-size: 14px;
 }
 
 #puzzle-input {
   width: min(450px, 90vw);
-  margin: 24px auto 0;
+  margin: 28px auto 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-#puzzle-input label {
-  font-size: 13px;
-  color: var(--text);
-  text-align: left;
-}
-
-#puzzle-input textarea {
-  font-family: var(--mono);
-  font-size: 13px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
-  resize: vertical;
-  word-break: break-all;
+  gap: 14px;
 }
 
 .controls-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
 }
 
-.controls-row label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.controls-row .spacer {
+  flex: 1;
 }
 
-.controls-row select {
+.controls-row select,
+.controls-row button {
   font-family: var(--sans);
-  padding: 6px 8px;
-  border-radius: 6px;
+  font-size: 14px;
+  padding: 7px 14px;
+  border-radius: 3px;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text-h);
-}
-
-.controls-row button {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
-  padding: 8px 20px;
-  border-radius: 6px;
-  border: 1px solid var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
   cursor: pointer;
 }
 
-.controls-row button:hover:not(:disabled) {
-  box-shadow: var(--shadow);
+.controls-row button.primary {
+  border-color: var(--accent-border);
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+}
+
+.controls-row button.primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.controls-row button:not(.primary):hover:not(:disabled) {
+  border-color: var(--text);
 }
 
 .controls-row button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .error {
-  color: #e5484d;
+  color: #c0392b;
   font-size: 13px;
   text-align: left;
   margin: 0;

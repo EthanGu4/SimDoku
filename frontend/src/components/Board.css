@@ -4,7 +4,7 @@
   grid-template-rows: repeat(9, 1fr);
   width: min(450px, 90vw);
   aspect-ratio: 1;
-  border: 2px solid var(--text-h);
+  border: 1px solid var(--text-h);
   background: var(--bg);
   margin: 0 auto;
 }

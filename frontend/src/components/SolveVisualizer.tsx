@@ -34,10 +34,6 @@ export function SolveVisualizer({ initialCells, result }: SolveVisualizerProps) 
           <dt>Elapsed</dt>
           <dd>{(result.stats.elapsed_time * 1000).toFixed(2)} ms</dd>
         </div>
-        <div>
-          <dt>Total steps</dt>
-          <dd>{result.stats.step_count}</dd>
-        </div>
       </dl>
     </section>
   );

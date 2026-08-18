@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { api } from "./api/client";
+import { PuzzleGridInput } from "./components/PuzzleGridInput";
 import { SolveVisualizer } from "./components/SolveVisualizer";
 import type { BoardCells, SolveResult } from "./playback/types";
 
-const SAMPLE_PUZZLE =
-  "530070000600195000098000060800060003400803001700020006060000280000419005000080079";
+const SAMPLE_PUZZLE_CELLS: BoardCells = [
+  [5, 3, 0, 0, 7, 0, 0, 0, 0],
+  [6, 0, 0, 1, 9, 5, 0, 0, 0],
+  [0, 9, 8, 0, 0, 0, 0, 6, 0],
+  [8, 0, 0, 0, 6, 0, 0, 0, 3],
+  [4, 0, 0, 8, 0, 3, 0, 0, 1],
+  [7, 0, 0, 0, 2, 0, 0, 0, 6],
+  [0, 6, 0, 0, 0, 0, 2, 8, 0],
+  [0, 0, 0, 4, 1, 9, 0, 0, 5],
+  [0, 0, 0, 0, 8, 0, 0, 7, 9],
+];
 
-function parsePuzzle(input: string): BoardCells | null {
-  const trimmed = input.replace(/\s+/g, "");
-  if (trimmed.length !== 81 || !/^[0-9.]+$/.test(trimmed)) return null;
-
-  const cells: BoardCells = [];
-  for (let row = 0; row < 9; row++) {
-    const rowChars = trimmed.slice(row * 9, row * 9 + 9);
-    cells.push([...rowChars].map((ch) => (ch === "." ? 0 : Number(ch))));
-  }
-  return cells;
-}
+const EMPTY_CELLS: BoardCells = Array.from({ length: 9 }, () => Array(9).fill(0));
 
 function App() {
-  const [puzzleText, setPuzzleText] = useState(SAMPLE_PUZZLE);
+  const [puzzleCells, setPuzzleCells] = useState<BoardCells>(SAMPLE_PUZZLE_CELLS);
   const [algorithms, setAlgorithms] = useState<string[]>([]);
   const [algorithm, setAlgorithm] = useState("backtracking");
   const [result, setResult] = useState<SolveResult | null>(null);
@@ -38,17 +38,11 @@ function App() {
   }, []);
 
   async function handleSolve() {
-    const cells = parsePuzzle(puzzleText);
-    if (!cells) {
-      setError("Enter exactly 81 characters (digits 1-9, and 0 or . for blank cells).");
-      return;
-    }
-
     setError(null);
     setIsSolving(true);
     const { data, error: apiError } = await api.POST("/solve/{algorithm}", {
       params: { path: { algorithm } },
-      body: { cells },
+      body: { cells: puzzleCells },
     });
     setIsSolving(false);
 
@@ -58,7 +52,14 @@ function App() {
     }
 
     setResult(data);
-    setSolvedFor(cells);
+    setSolvedFor(puzzleCells);
+  }
+
+  function handleClear() {
+    setPuzzleCells(EMPTY_CELLS);
+    setResult(null);
+    setSolvedFor(null);
+    setError(null);
   }
 
   return (
@@ -69,31 +70,21 @@ function App() {
       </header>
 
       <section id="puzzle-input">
-        <label htmlFor="puzzle">Puzzle (81 chars, 0 or . for blank cells)</label>
-        <textarea
-          id="puzzle"
-          value={puzzleText}
-          onChange={(e) => setPuzzleText(e.target.value)}
-          rows={3}
-          spellCheck={false}
-        />
+        <PuzzleGridInput cells={puzzleCells} onChange={setPuzzleCells} />
 
         <div className="controls-row">
-          <label htmlFor="algorithm">
-            Algorithm
-            <select
-              id="algorithm"
-              value={algorithm}
-              onChange={(e) => setAlgorithm(e.target.value)}
-            >
-              {(algorithms.length > 0 ? algorithms : [algorithm]).map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button type="button" onClick={handleSolve} disabled={isSolving}>
+          <select value={algorithm} onChange={(e) => setAlgorithm(e.target.value)}>
+            {(algorithms.length > 0 ? algorithms : [algorithm]).map((name) => (
+              <option key={name} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+          <span className="spacer" />
+          <button type="button" onClick={handleClear}>
+            Clear
+          </button>
+          <button type="button" className="primary" onClick={handleSolve} disabled={isSolving}>
             {isSolving ? "Solving…" : "Solve"}
           </button>
         </div>
