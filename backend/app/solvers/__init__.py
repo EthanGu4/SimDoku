@@ -2,6 +2,7 @@
 adding a module + an import line here — nothing else in the app should need
 to change."""
 
+from app.ml import neural_solver  # noqa: F401
 from app.solvers import (  # noqa: F401
     backtracking,
     constraint_propagation,

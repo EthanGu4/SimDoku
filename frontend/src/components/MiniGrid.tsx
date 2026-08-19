@@ -4,7 +4,8 @@ export type MiniGridVariant =
   | "backtracking"
   | "constraint-propagation"
   | "dancing-links"
-  | "simulated-annealing";
+  | "simulated-annealing"
+  | "neural-net";
 
 interface MiniGridProps {
   variant: MiniGridVariant;

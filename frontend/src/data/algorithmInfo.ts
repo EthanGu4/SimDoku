@@ -86,4 +86,22 @@ export const ALGORITHM_INFO: Record<string, AlgorithmInfo> = {
     history:
       "Introduced by Kirkpatrick, Gelatt & Vecchi in 1983, inspired by annealing metal — heating it, then cooling slowly so it settles into a low-energy crystalline state.",
   },
+  neural_net: {
+    title: "Neural Net",
+    animation: "neural-net",
+    summary:
+      "A small CNN trained on synthetic puzzles predicts a probability distribution over digits 1-9 for every empty cell. Each round, it places whichever (cell, digit) it's most confident about — checked against Sudoku's rules first — and repeats on the updated board.",
+    pros: [
+      "No hand-written solving rules — the strategy is entirely learned",
+      "Every placement it makes is still rule-checked, so it never corrupts the board",
+      "Fast per step — one small forward pass, no search tree",
+    ],
+    cons: [
+      "No backtracking — a confident-but-wrong early guess can dead-end it",
+      "Not complete, like simulated annealing — can get stuck and stop early",
+      "Only as good as its (small, synthetic) training data",
+    ],
+    history:
+      "Convolutional neural nets for Sudoku are a popular deep-learning demo project — a good illustration that a model with zero hard-coded rules can still learn a lot of Sudoku's structure purely from solved examples.",
+  },
 };

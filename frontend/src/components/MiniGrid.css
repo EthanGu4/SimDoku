@@ -125,6 +125,49 @@
   animation-delay: 1.04s;
 }
 
+/* Neural net: most cells confidently settle into place at once (no trial
+   and error to show), but one cell — representing the model painting
+   itself into a corner — just flickers weakly and never quite commits. */
+.mini-grid-neural-net .mini-cell {
+  animation: mg-confident 3.6s ease-out infinite;
+  animation-delay: calc(var(--i) * 0.12s);
+}
+
+.mini-grid-neural-net .mini-cell:nth-child(5) {
+  animation-name: mg-unsure;
+  animation-delay: 0s;
+}
+
+@keyframes mg-confident {
+  0%,
+  4% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+  20%,
+  86% {
+    background: var(--positive-bg);
+    box-shadow: inset 0 0 0 1px var(--positive);
+  }
+  96%,
+  100% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+}
+
+@keyframes mg-unsure {
+  0%,
+  100% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+  50% {
+    background: var(--warn-bg);
+    box-shadow: inset 0 0 0 1px var(--warn);
+  }
+}
+
 /* Simulated annealing: the whole grid flickers between valid/invalid noisily
    at first, then settles as the "temperature" cools. */
 .mini-grid-simulated-annealing .mini-cell {

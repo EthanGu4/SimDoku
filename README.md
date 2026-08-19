@@ -20,3 +20,5 @@ npm run dev
 ```
 
 Or run them separately — `uvicorn app.main:app --reload --port 8000` in `backend/` (venv active), `npm run dev` in `frontend/`.
+
+The `neural_net` solver loads pretrained weights committed at `backend/app/ml/weights/neural_solver.pt` — no training needed to run the app. To retrain it (e.g. after changing the model architecture in `app/ml/sudoku_cnn.py`), run `python -m scripts.train_neural_solver` from `backend/` with the venv active; it regenerates its own synthetic training puzzles, so no dataset download is needed.
