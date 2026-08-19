@@ -19,32 +19,13 @@
   --mono: ui-monospace, Consolas, monospace;
 
   font: 16px/145% var(--sans);
-  color-scheme: light dark;
+  color-scheme: light;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #131417;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #7f9fdb;
-    --accent-bg: #1c2330;
-    --accent-border: #7f9fdb;
-    --positive: #4ade80;
-    --positive-bg: #16241c;
-    --warn: #eab543;
-    --warn-bg: #2a2214;
-    --danger: #f2867f;
-    --danger-bg: #2a1818;
-  }
 }
 
 #root {

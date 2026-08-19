@@ -4,7 +4,7 @@
   grid-template-rows: repeat(9, 1fr);
   width: min(450px, 90vw);
   aspect-ratio: 1;
-  border: 1px solid var(--text-h);
+  border: 3px solid var(--text-h);
   margin: 0 auto;
 }
 
@@ -28,9 +28,9 @@
 }
 
 .puzzle-cell.border-right-thick {
-  border-right: 1px solid var(--text-h);
+  border-right: 3px solid var(--text-h);
 }
 
 .puzzle-cell.border-bottom-thick {
-  border-bottom: 1px solid var(--text-h);
+  border-bottom: 3px solid var(--text-h);
 }

@@ -4,7 +4,7 @@
   grid-template-rows: repeat(9, 1fr);
   width: var(--board-size, min(450px, 90vw));
   aspect-ratio: 1;
-  border: 1px solid var(--text-h);
+  border: 3px solid var(--text-h);
   background: var(--bg);
   margin: 0 auto;
 }
@@ -45,9 +45,9 @@
 }
 
 .cell.border-right-thick {
-  border-right: 2px solid var(--text-h);
+  border-right: 3px solid var(--text-h);
 }
 
 .cell.border-bottom-thick {
-  border-bottom: 2px solid var(--text-h);
+  border-bottom: 3px solid var(--text-h);
 }
