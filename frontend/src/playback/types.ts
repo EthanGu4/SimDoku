@@ -12,4 +12,7 @@ export type SolveStats = GeneratedResult["stats"];
 export type BoardCells = number[][];
 
 export type BenchmarkPuzzle = components["schemas"]["BenchmarkPuzzle"];
-export type BenchmarkRun = components["schemas"]["BenchmarkRun"];
+
+export type RaceRunResult = components["schemas"]["RaceRunResult"];
+export type AlgorithmProgress = components["schemas"]["AlgorithmProgress"];
+export type StartRaceResponse = components["schemas"]["StartRaceResponse"];

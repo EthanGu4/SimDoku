@@ -1,142 +1,96 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "../api/client";
-import type { BenchmarkPuzzle, BenchmarkRun, SolveResult } from "../playback/types";
-import { SolveVisualizer } from "./SolveVisualizer";
+import type { AlgorithmProgress } from "../playback/types";
+import { RacePanel } from "./RacePanel";
 import "./RaceMode.css";
 
-type ResultsByAlgorithm = Record<string, SolveResult>;
+type Difficulty = "easy" | "medium" | "hard";
+
+const POLL_INTERVAL_MS = 300;
 
 export function RaceMode() {
-  const [puzzles, setPuzzles] = useState<BenchmarkPuzzle[]>([]);
+  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   const [algorithms, setAlgorithms] = useState<string[]>([]);
-  const [puzzleId, setPuzzleId] = useState<string>("");
-  const [results, setResults] = useState<ResultsByAlgorithm>({});
-  const [history, setHistory] = useState<BenchmarkRun[]>([]);
+  const [puzzleCount, setPuzzleCount] = useState(0);
+  const [progress, setProgress] = useState<Record<string, AlgorithmProgress> | null>(null);
   const [isRacing, setIsRacing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    api.GET("/puzzles").then(({ data }) => {
-      if (data && data.length > 0) {
-        setPuzzles(data);
-        setPuzzleId(data[0].id);
-      }
-    });
-    api.GET("/solve/algorithms").then(({ data }) => {
-      if (data) setAlgorithms(data);
-    });
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
   }, []);
 
-  useEffect(() => {
-    if (!puzzleId) return;
-    api.GET("/benchmark/history", { params: { query: { puzzle_id: puzzleId } } }).then(
-      ({ data }) => {
-        if (data) setHistory(data);
-      },
-    );
-  }, [puzzleId]);
-
   async function handleRace() {
-    if (!puzzleId || algorithms.length === 0) return;
     setError(null);
+    setProgress(null);
+    if (pollRef.current) clearInterval(pollRef.current);
+
+    const { data, error: apiError } = await api.POST("/race/start", {
+      params: { query: { difficulty } },
+    });
+
+    if (apiError || !data) {
+      setError("Couldn't start the race — try again.");
+      return;
+    }
+
+    setAlgorithms(data.algorithms);
+    setPuzzleCount(data.puzzle_count);
     setIsRacing(true);
-    setResults({});
 
-    const responses = await Promise.all(
-      algorithms.map((algorithm) =>
-        api.POST("/benchmark/{algorithm}", {
-          params: { path: { algorithm } },
-          body: { puzzle_id: puzzleId },
-        }),
-      ),
-    );
+    const raceId = data.race_id;
+    pollRef.current = setInterval(async () => {
+      const { data: progressData, error: progressError } = await api.GET(
+        "/race/{race_id}/progress",
+        { params: { path: { race_id: raceId } } },
+      );
 
-    setIsRacing(false);
+      if (progressError || !progressData) return;
 
-    const next: ResultsByAlgorithm = {};
-    let hadFailure = false;
-    responses.forEach((response, i) => {
-      if (response.data) {
-        next[algorithms[i]] = response.data;
-      } else {
-        hadFailure = true;
+      setProgress(progressData.algorithms);
+
+      const allDone = Object.values(progressData.algorithms).every((p) => p.done);
+      if (allDone && pollRef.current) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+        setIsRacing(false);
       }
-    });
-    setResults(next);
-    if (hadFailure) setError("One or more algorithms failed to run.");
-
-    const { data: freshHistory } = await api.GET("/benchmark/history", {
-      params: { query: { puzzle_id: puzzleId } },
-    });
-    if (freshHistory) setHistory(freshHistory);
+    }, POLL_INTERVAL_MS);
   }
-
-  const puzzle = puzzles.find((p) => p.id === puzzleId);
-  const hasResults = Object.keys(results).length > 0;
 
   return (
     <section id="race-mode">
       <div className="controls-row">
-        <select value={puzzleId} onChange={(e) => setPuzzleId(e.target.value)}>
-          {puzzles.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name} — {p.given_count} givens
-            </option>
-          ))}
+        <select value={difficulty} onChange={(e) => setDifficulty(e.target.value as Difficulty)}>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
         </select>
         <span className="spacer" />
-        <button
-          type="button"
-          className="primary"
-          onClick={handleRace}
-          disabled={isRacing || !puzzleId}
-        >
+        <button type="button" className="primary" onClick={handleRace} disabled={isRacing}>
           {isRacing ? "Racing…" : "Race!"}
         </button>
       </div>
+      <p className="race-hint">
+        Every algorithm races through 100 {difficulty} puzzles live, each at its own pace — a
+        struggling one is cut off after 30s.
+      </p>
 
       {error && <p className="error">{error}</p>}
 
-      {hasResults && puzzle && (
+      {progress && (
         <div className="race-grid">
-          {algorithms.map((algorithm) => {
-            const result = results[algorithm];
-            if (!result) return null;
-            return (
-              <div key={algorithm} className="race-panel">
-                <h3>{algorithm}</h3>
-                <SolveVisualizer initialCells={puzzle.board.cells} result={result} autoPlay />
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {history.length > 0 && (
-        <div id="benchmark-history">
-          <h2>History</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Algorithm</th>
-                <th>Solved</th>
-                <th>Elapsed</th>
-                <th>Steps</th>
-                <th>When</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history.map((run, i) => (
-                <tr key={i}>
-                  <td>{run.algorithm}</td>
-                  <td>{run.solved ? "Yes" : "No"}</td>
-                  <td>{(run.elapsed_time * 1000).toFixed(2)} ms</td>
-                  <td>{run.step_count}</td>
-                  <td>{new Date(run.created_at).toLocaleTimeString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {algorithms.map((algorithm) => (
+            <RacePanel
+              key={algorithm}
+              algorithm={algorithm}
+              progress={progress[algorithm]}
+              puzzleCount={puzzleCount}
+            />
+          ))}
         </div>
       )}
     </section>

@@ -5,7 +5,6 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 backend/openapi.json
-backend/benchmark.db
 
 # Node (root dev tooling)
 node_modules/
