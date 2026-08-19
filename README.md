@@ -3,6 +3,8 @@ Sudoku simulation because why not
 
 ## Development
 
+Prerequisites: Python 3.11+, Node, and [Tesseract OCR](https://github.com/UB-Mannheim/tesseract/wiki) on your PATH (used for photo-based board detection — install via `winget install --id UB-Mannheim.TesseractOCR -e` on Windows, or `brew install tesseract` / `apt install tesseract-ocr` elsewhere).
+
 First-time setup:
 
 ```

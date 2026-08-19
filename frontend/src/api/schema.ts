@@ -89,6 +89,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/board/detect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Detect */
+        post: operations["detect_board_detect_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -157,6 +174,11 @@ export interface components {
              * @description 9 rows of 9 cells each; 0 = empty, 1-9 = filled.
              */
             cells: number[][];
+        };
+        /** Body_detect_board_detect_post */
+        Body_detect_board_detect_post: {
+            /** Image */
+            image: string;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -373,6 +395,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BenchmarkRun"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    detect_board_detect_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_detect_board_detect_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Board"];
                 };
             };
             /** @description Validation Error */

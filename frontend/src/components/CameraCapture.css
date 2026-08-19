@@ -1,0 +1,32 @@
+.camera-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.camera-panel {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+  width: min(480px, 92vw);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.camera-panel video {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 3px;
+  background: #000;
+}
+
+.camera-panel .controls-row {
+  justify-content: flex-end;
+}

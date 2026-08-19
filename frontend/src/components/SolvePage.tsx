@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "../api/client";
 import type { BoardCells, SolveResult } from "../playback/types";
+import { CameraCapture } from "./CameraCapture";
 import { PuzzleGridInput } from "./PuzzleGridInput";
 import { SolveVisualizer } from "./SolveVisualizer";
 
@@ -26,6 +27,9 @@ export function SolvePage() {
   const [solvedFor, setSolvedFor] = useState<BoardCells | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isSolving, setIsSolving] = useState(false);
+  const [isDetecting, setIsDetecting] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     api.GET("/solve/algorithms").then(({ data }) => {
@@ -61,6 +65,41 @@ export function SolvePage() {
     setError(null);
   }
 
+  async function detectAndFillGrid(image: Blob) {
+    setError(null);
+    setIsDetecting(true);
+    const formData = new FormData();
+    formData.append("image", image);
+
+    const { data, error: apiError } = await api.POST("/board/detect", {
+      // openapi-fetch types this body as the multipart schema shape, but a
+      // FormData instance is passed through to fetch() as-is (see its
+      // defaultBodySerializer) — this cast just satisfies that mismatch.
+      body: formData as never,
+    });
+    setIsDetecting(false);
+
+    if (apiError) {
+      setError("Couldn't read a puzzle grid from that photo — try a clearer, more square-on shot.");
+      return;
+    }
+
+    setPuzzleCells(data.cells);
+    setResult(null);
+    setSolvedFor(null);
+  }
+
+  async function handlePhotoSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (file) await detectAndFillGrid(file);
+  }
+
+  async function handlePhotoCaptured(blob: Blob) {
+    setShowCamera(false);
+    await detectAndFillGrid(blob);
+  }
+
   return (
     <>
       <section id="puzzle-input">
@@ -75,6 +114,23 @@ export function SolvePage() {
             ))}
           </select>
           <span className="spacer" />
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={handlePhotoSelected}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isDetecting}
+          >
+            {isDetecting ? "Reading photo…" : "Upload photo"}
+          </button>
+          <button type="button" onClick={() => setShowCamera(true)} disabled={isDetecting}>
+            Take photo
+          </button>
           <button type="button" onClick={handleClear}>
             Clear
           </button>
@@ -87,6 +143,10 @@ export function SolvePage() {
       </section>
 
       {result && solvedFor && <SolveVisualizer initialCells={solvedFor} result={result} />}
+
+      {showCamera && (
+        <CameraCapture onCapture={handlePhotoCaptured} onClose={() => setShowCamera(false)} />
+      )}
     </>
   );
 }
