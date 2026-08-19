@@ -1,0 +1,92 @@
+.algo-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(340px, 92vw);
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.08);
+  overflow-y: auto;
+  padding: 20px;
+  z-index: 50;
+}
+
+.algo-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.algo-panel-header h2 {
+  font-size: 16px;
+}
+
+.algo-panel-close {
+  font-family: var(--sans);
+  font-size: 20px;
+  line-height: 1;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.algo-panel-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.algo-panel-tabs button {
+  font-family: var(--sans);
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.algo-panel-tabs button.active {
+  border-color: var(--accent-border);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.algo-panel-body h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  margin: 16px 0 6px;
+}
+
+.algo-summary,
+.algo-history {
+  font-size: 14px;
+  line-height: 150%;
+  color: var(--text);
+}
+
+.algo-pros,
+.algo-cons {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 150%;
+  color: var(--text);
+}
+
+.algo-pros li::marker {
+  color: var(--positive);
+}
+
+.algo-cons li::marker {
+  color: var(--danger);
+}

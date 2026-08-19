@@ -1,0 +1,166 @@
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 120px;
+  aspect-ratio: 1;
+  gap: 4px;
+  margin: 4px auto 16px;
+}
+
+.mini-cell {
+  border-radius: 2px;
+  background: var(--code-bg);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+/* Backtracking: cells fill in order, one guess is rejected (red) and
+   retried before the grid resets and loops. */
+.mini-grid-backtracking .mini-cell {
+  animation: mg-place 4.5s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.35s);
+}
+
+.mini-grid-backtracking .mini-cell:nth-child(6) {
+  animation-name: mg-reject-then-place;
+}
+
+@keyframes mg-place {
+  0%,
+  4% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+  12%,
+  86% {
+    background: var(--positive-bg);
+    box-shadow: inset 0 0 0 1px var(--positive);
+  }
+  96%,
+  100% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+}
+
+@keyframes mg-reject-then-place {
+  0%,
+  4% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+  10%,
+  20% {
+    background: var(--danger-bg);
+    box-shadow: inset 0 0 0 1px var(--danger);
+  }
+  28%,
+  86% {
+    background: var(--positive-bg);
+    box-shadow: inset 0 0 0 1px var(--positive);
+  }
+  96%,
+  100% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+}
+
+/* Constraint propagation: a calmer, steadier sweep — logical deduction,
+   never a wrong guess to undo. */
+.mini-grid-constraint-propagation .mini-cell {
+  animation: mg-deduce 3s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.22s);
+}
+
+@keyframes mg-deduce {
+  0%,
+  4% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+  14%,
+  80% {
+    background: var(--accent-bg);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+  94%,
+  100% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+}
+
+/* Dancing links: quick, non-sequential jumps between cells — covering and
+   uncovering constraint columns rather than filling left-to-right. */
+.mini-grid-dancing-links .mini-cell {
+  animation: mg-deduce 1.8s ease-in-out infinite;
+}
+
+.mini-grid-dancing-links .mini-cell:nth-child(1) {
+  animation-delay: 0s;
+}
+.mini-grid-dancing-links .mini-cell:nth-child(6) {
+  animation-delay: 0.13s;
+}
+.mini-grid-dancing-links .mini-cell:nth-child(3) {
+  animation-delay: 0.26s;
+}
+.mini-grid-dancing-links .mini-cell:nth-child(8) {
+  animation-delay: 0.39s;
+}
+.mini-grid-dancing-links .mini-cell:nth-child(2) {
+  animation-delay: 0.52s;
+}
+.mini-grid-dancing-links .mini-cell:nth-child(9) {
+  animation-delay: 0.65s;
+}
+.mini-grid-dancing-links .mini-cell:nth-child(4) {
+  animation-delay: 0.78s;
+}
+.mini-grid-dancing-links .mini-cell:nth-child(7) {
+  animation-delay: 0.91s;
+}
+.mini-grid-dancing-links .mini-cell:nth-child(5) {
+  animation-delay: 1.04s;
+}
+
+/* Simulated annealing: the whole grid flickers between valid/invalid noisily
+   at first, then settles as the "temperature" cools. */
+.mini-grid-simulated-annealing .mini-cell {
+  animation: mg-cool 6s ease-in infinite;
+}
+
+@keyframes mg-cool {
+  0%,
+  3% {
+    background: var(--warn-bg);
+    box-shadow: inset 0 0 0 1px var(--warn);
+  }
+  8% {
+    background: var(--danger-bg);
+    box-shadow: inset 0 0 0 1px var(--danger);
+  }
+  16% {
+    background: var(--warn-bg);
+    box-shadow: inset 0 0 0 1px var(--warn);
+  }
+  24% {
+    background: var(--danger-bg);
+    box-shadow: inset 0 0 0 1px var(--danger);
+  }
+  34% {
+    background: var(--warn-bg);
+    box-shadow: inset 0 0 0 1px var(--warn);
+  }
+  50%,
+  92% {
+    background: var(--positive-bg);
+    box-shadow: inset 0 0 0 1px var(--positive);
+  }
+  98%,
+  100% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+}

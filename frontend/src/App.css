@@ -1,3 +1,24 @@
+#menu-button {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  z-index: 40;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1;
+  padding: 4px 9px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+#menu-button:hover {
+  border-color: var(--text);
+  color: var(--text-h);
+}
+
 #app-header {
   padding: 32px 20px 4px;
   text-align: center;
