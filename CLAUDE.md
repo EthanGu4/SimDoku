@@ -51,7 +51,7 @@ Every new solver module (`backend/app/solvers/*.py` or `backend/app/ml/*.py`) mu
 
 Frontend testing is limited to the visualizer/playback reducer logic (Vitest + React Testing Library) — not full e2e coverage.
 
-CI (GitHub Actions) runs lint + test on push to main. No deploy pipeline, environment matrix, or coverage gate until the project reaches the polish/deploy phase.
+CI (GitHub Actions) runs lint + test on push to main. No environment matrix or coverage gate; deployment is a `Dockerfile` built by hand or by the host, not a pipeline.
 
 ## Roadmap / phase status
 
@@ -66,6 +66,6 @@ Tracks actual implementation state — update as phases land. This section is th
 - [x] **Phase 4 — ML: photo board detection.** Image upload → CV pipeline → board JSON → existing solve flow.
 - [x] **Phase 5 — ML: unconventional solving methods.** ML solver(s) behind the standard `SolverStrategy` interface.
 - [x] **Phase 6 — ML: algorithm picker / meta-solver.** `algorithm_picker` is a pseudo-solver (`app/ml/algorithm_picker.py`) that extracts a few structural features (given count, min/avg/max candidates per empty cell — `app/ml/algorithm_features.py`), uses a small decision tree to predict which of the three *complete* solvers (backtracking, constraint propagation, dancing links) will be fastest, and delegates to it — simulated annealing and the neural net are deliberately excluded as candidates since they can fail to solve at all. Trained on-demand from the puzzle bank (`scripts/train_algorithm_picker.py`), not from persisted history. Notable finding from real timing data: dancing links' O(1) backtrack makes it fastest on nearly every real puzzle tried, so the training set needed synthetic near-complete puzzles added just to surface the (real, but narrow) region where constraint propagation wins instead.
-- [ ] **Phase 7 — Polish/deploy (stretch).** Puzzle generator, run history, deployment, demo material.
+- [x] **Phase 7 — Deploy + demo material.** Single-image `Dockerfile`: the frontend is built and served by the backend, so there is one process, one port, and no CORS to configure. The frontend calls the API with same-origin relative URLs, with a Vite dev proxy (`vite.config.ts`) making that work in local dev too. Torch is installed from the CPU wheel index in both the image and CI, since plain `pip install torch` on Linux pulls the multi-GB CUDA build for a 9x9 board that never touches a GPU. README rewritten as demo material with real screenshots in `docs/`. The puzzle generator and run history originally sketched for this phase were dropped as unnecessary.
 
 Algorithms are always added one at a time, each self-contained.

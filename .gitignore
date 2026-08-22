@@ -5,6 +5,8 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 backend/openapi.json
+backend/static/
+frontend/dist/
 
 # Node (root dev tooling)
 node_modules/

@@ -1,0 +1,13 @@
+**/node_modules
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.ruff_cache
+frontend/dist
+backend/openapi.json
+backend/tests
+backend/scripts
+.git
+.github
+*.md
