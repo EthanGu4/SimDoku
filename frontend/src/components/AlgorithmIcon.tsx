@@ -27,9 +27,6 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
     <path d="M4 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM4 17a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM16 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM4 6v8M4 6l12 2.5M4 14l12-2.5" />
   ),
   algorithm_picker: <path d="M10 2v3M10 15v3M2 10h3M15 10h3M10 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" />,
-  genetic: (
-    <path d="M6 3c0 4 8 4 8 7s-8 3-8 7M14 3c0 4-8 4-8 7s8 3 8 7M7 6h6M7 14h6" />
-  ),
   // The four corners an X-Wing keys off, plus the lines linking them.
   x_wing_swordfish: (
     <path d="M6 6h.01M14 6h.01M6 14h.01M14 14h.01M6 6h8M6 14h8M6 6v8M14 6v8M6 6l8 8M14 6l-8 8" />

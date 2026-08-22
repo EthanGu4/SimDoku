@@ -10,6 +10,7 @@ from app.solvers import (  # noqa: F401
     backtracking,
     constraint_propagation,
     dancing_links,
+    fish_patterns,
     simulated_annealing,
 )
 from app.solvers.base import get_solver, list_solvers, register

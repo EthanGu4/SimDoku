@@ -50,6 +50,24 @@ export const ALGORITHM_INFO: Record<string, AlgorithmInfo> = {
     history:
       'These are exactly the techniques in human "how to solve Sudoku" guides. As a general AI technique, constraint propagation traces back to 1970s CSP research, like Waltz\'s arc-consistency work on scene labeling.',
   },
+  x_wing_swordfish: {
+    title: "X-Wing & Swordfish",
+    animation: "fish-patterns",
+    summary:
+      "Constraint propagation plus the \"fish\" patterns. If a digit can only sit in the same two columns across two different rows, those rows must use it up there, so no other row can place it in those columns. X-Wing is that 2x2 case, Swordfish stretches the same argument across 3 rows and 3 columns.",
+    pros: [
+      "Solves more by pure logic, so it falls back to guessing less often",
+      "These are real techniques human solvers learn for hard puzzles",
+      "Never worse than plain constraint propagation when no pattern applies",
+    ],
+    cons: [
+      "The patterns are rare, firing on roughly 1 in 7 puzzles here",
+      "Eliminations narrow candidates instead of placing digits, so the work is invisible on the board",
+      "Still needs a backtracking fallback for the hardest puzzles",
+    ],
+    history:
+      "Named for their shape on a pencil-marked grid, these come from the human Sudoku community rather than computer science, and they're the point where solving stops being about scanning single rows and starts being about relationships between them.",
+  },
   dancing_links: {
     title: "Dancing Links (Algorithm X)",
     animation: "dancing-links",
