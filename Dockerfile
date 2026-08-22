@@ -5,7 +5,9 @@
 FROM node:22-slim AS frontend
 
 WORKDIR /frontend
-COPY frontend/package.json frontend/package-lock.json ./
+# .npmrc carries legacy-peer-deps, without which `npm ci` fails on
+# openapi-typescript's stale TypeScript peer range. See the file for detail.
+COPY frontend/package.json frontend/package-lock.json frontend/.npmrc ./
 RUN npm ci
 COPY frontend/ ./
 RUN npm run build
