@@ -38,49 +38,19 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/puzzles": {
+    "/puzzles/random": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List Puzzles */
-        get: operations["list_puzzles_puzzles_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/race/start": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Start */
-        post: operations["start_race_start_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/race/{race_id}/progress": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Progress */
-        get: operations["progress_race__race_id__progress_get"];
+        /**
+         * Random Puzzle
+         * @description One puzzle from the graded bank, for the comparison view to run every
+         *     algorithm against.
+         */
+        get: operations["random_puzzle_puzzles_random_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -127,27 +97,14 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** AlgorithmProgress */
-        AlgorithmProgress: {
-            /** Done */
-            done: boolean;
-            /** Results */
-            results: components["schemas"]["RaceRunResult"][];
-        };
-        /** BenchmarkPuzzle */
-        BenchmarkPuzzle: {
+        /** BankPuzzle */
+        BankPuzzle: {
             /** Id */
             id: string;
-            /** Name */
-            name: string;
-            /**
-             * Difficulty
-             * @enum {string}
-             */
-            difficulty: "easy" | "medium" | "hard";
             board: components["schemas"]["Board"];
-            /** Given Count */
-            given_count: number;
+            solution: components["schemas"]["Board"];
+            /** Rating */
+            rating: number;
         };
         /**
          * Board
@@ -169,24 +126,6 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
-        };
-        /** RaceProgress */
-        RaceProgress: {
-            /** Algorithms */
-            algorithms: {
-                [key: string]: components["schemas"]["AlgorithmProgress"];
-            };
-        };
-        /** RaceRunResult */
-        RaceRunResult: {
-            /** Puzzle Id */
-            puzzle_id: string;
-            /** Solved */
-            solved: boolean;
-            /** Elapsed Time */
-            elapsed_time: number;
-            given_board: components["schemas"]["Board"];
-            solved_board: components["schemas"]["Board"];
         };
         /** SolveResult */
         SolveResult: {
@@ -247,15 +186,6 @@ export interface components {
             candidates_removed?: number[];
             /** Reasoning */
             reasoning?: string | null;
-        };
-        /** StartRaceResponse */
-        StartRaceResponse: {
-            /** Race Id */
-            race_id: string;
-            /** Algorithms */
-            algorithms: string[];
-            /** Puzzle Count */
-            puzzle_count: number;
         };
         /** ValidationError */
         ValidationError: {
@@ -334,27 +264,7 @@ export interface operations {
             };
         };
     };
-    list_puzzles_puzzles_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BenchmarkPuzzle"][];
-                };
-            };
-        };
-    };
-    start_race_start_post: {
+    random_puzzle_puzzles_random_get: {
         parameters: {
             query: {
                 difficulty: "easy" | "medium" | "hard";
@@ -371,38 +281,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["StartRaceResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    progress_race__race_id__progress_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                race_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RaceProgress"];
+                    "application/json": components["schemas"]["BankPuzzle"];
                 };
             };
             /** @description Validation Error */

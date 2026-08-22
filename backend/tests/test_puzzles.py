@@ -1,30 +1,20 @@
-from app.core import is_valid_board
-from app.core.puzzles import BENCHMARK_PUZZLES, get_puzzle
+from app.core import Board, is_valid_board
+from app.core.puzzles import EASY_CELLS, HARD_CELLS, MEDIUM_CELLS
 from app.solvers.backtracking import BacktrackingSolver
 
 
-def test_every_benchmark_puzzle_is_valid_and_solvable() -> None:
-    for puzzle in BENCHMARK_PUZZLES:
-        assert is_valid_board(puzzle.board.cells)
-        result = BacktrackingSolver().solve(puzzle.board)
+def test_every_fixture_puzzle_is_valid_and_solvable() -> None:
+    """These back every solver's correctness battery, so a broken fixture
+    would quietly invalidate a lot of other tests."""
+    for cells in (EASY_CELLS, MEDIUM_CELLS, HARD_CELLS):
+        assert is_valid_board(cells)
+        result = BacktrackingSolver().solve(Board(cells=cells))
         assert result.solved is True
 
 
-def test_given_count_matches_the_board() -> None:
-    for puzzle in BENCHMARK_PUZZLES:
-        actual = sum(1 for row in puzzle.board.cells for value in row if value != 0)
-        assert puzzle.given_count == actual
-
-
-def test_ids_are_unique() -> None:
-    ids = [puzzle.id for puzzle in BENCHMARK_PUZZLES]
-    assert len(ids) == len(set(ids))
-
-
-def test_get_puzzle_looks_up_by_id() -> None:
-    first = BENCHMARK_PUZZLES[0]
-    assert get_puzzle(first.id) == first
-
-
-def test_get_puzzle_returns_none_for_unknown_id() -> None:
-    assert get_puzzle("does-not-exist") is None
+def test_fixtures_get_progressively_sparser() -> None:
+    givens = [
+        sum(1 for row in cells for v in row if v != 0)
+        for cells in (EASY_CELLS, MEDIUM_CELLS, HARD_CELLS)
+    ]
+    assert givens == sorted(givens, reverse=True)

@@ -1,23 +1,23 @@
-"""Trains the algorithm picker (Phase 6): for every puzzle in the race
-dataset, runs each complete solver (backtracking, constraint_propagation,
+"""Trains the algorithm picker (Phase 6): for every puzzle in the puzzle
+bank, runs each complete solver (backtracking, constraint_propagation,
 dancing_links) with a wall-clock cap, labels the puzzle with whichever was
 fastest, and fits a small decision tree on a few structural features
 (app.ml.algorithm_features). Weights are committed; this is a dev-time
 tool, not run at request time.
 
-Trains on-demand from the race dataset rather than from persisted run
-history, since race mode is stateless by design (see CLAUDE.md).
+Trains on-demand from the committed puzzle bank rather than from any
+persisted run history, since nothing in this app stores benchmark runs.
 
-The race dataset alone turned out to have almost no label diversity:
+The puzzle bank alone turned out to have almost no label diversity:
 dancing_links' O(1) backtrack makes it fastest on nearly every puzzle in
 that set (296/300 in an early run), which starved the other two candidates
 of training examples. The gap is puzzles solvable almost entirely by naked
 and hidden singles, where constraint_propagation's near-zero search cost
-beats dancing_links' fixed exact-cover setup cost — the race dataset's
+beats dancing_links' fixed exact-cover setup cost — the bank's
 "easy" bucket (Sukaku Explainer rating < 1.5) still isn't that easy. So
 this also generates synthetic puzzles spanning a much wider given-count
 range (same randomized-backtracking generator as
-scripts/import_race_puzzles.py, no external dataset) specifically to
+scripts/import_puzzle_bank.py, no external dataset) specifically to
 surface those cases.
 
 Usage (from backend/, with the venv active):
@@ -35,7 +35,7 @@ import joblib  # noqa: E402
 from sklearn.model_selection import train_test_split  # noqa: E402
 from sklearn.tree import DecisionTreeClassifier  # noqa: E402
 
-from app.core.race_puzzles import Difficulty, get_race_puzzles  # noqa: E402
+from app.core.puzzle_bank import Difficulty, get_puzzles  # noqa: E402
 from app.core.rules import is_valid_placement  # noqa: E402
 from app.core.schemas import GRID_SIZE, Board  # noqa: E402
 from app.core.timeout import solve_with_timeout  # noqa: E402
@@ -116,7 +116,7 @@ def build_dataset() -> tuple[list[list[float]], list[str]]:
     labels: list[str] = []
 
     for difficulty in DIFFICULTIES:
-        puzzles = get_race_puzzles(difficulty)
+        puzzles = get_puzzles(difficulty)
         print(f"timing {len(puzzles)} {difficulty} puzzles against {list(SOLVERS)}...")
         for puzzle in puzzles:
             fastest = _label_puzzle(puzzle.board.cells)

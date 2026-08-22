@@ -1,14 +1,15 @@
-"""Race-mode puzzle dataset: 100 puzzles each of easy/medium/hard, sourced
+"""The graded puzzle bank: 100 puzzles each of easy/medium/hard, sourced
 from grantm/sudoku-exchange-puzzle-bank (public domain, graded via Sukaku
-Explainer) via scripts/import_race_puzzles.py. Committed as a static JSON
-fixture — race mode never depends on network access at request time.
+Explainer) via scripts/import_puzzle_bank.py. Committed as a static JSON
+fixture, so nothing here depends on network access at request time.
 
 Deliberately separate from app/core/puzzles.py, whose small hand-picked set
 exists to exercise specific solver behavior (rejects, backtracks, etc.) in
-tests — this is a large, difficulty-graded batch for racing algorithms
-against each other."""
+tests. This is a large, difficulty-graded bank used to hand the comparison
+view a real puzzle to run every algorithm against."""
 
 import json
+import random
 from pathlib import Path
 from typing import Literal
 
@@ -18,21 +19,21 @@ from app.core.schemas import Board
 
 Difficulty = Literal["easy", "medium", "hard"]
 
-_DATA_PATH = Path(__file__).parent / "data" / "race_puzzles.json"
+_DATA_PATH = Path(__file__).parent / "data" / "puzzle_bank.json"
 
 
-class RacePuzzle(BaseModel):
+class BankPuzzle(BaseModel):
     id: str
     board: Board
     solution: Board
     rating: float
 
 
-def _load() -> dict[str, list[RacePuzzle]]:
+def _load() -> dict[str, list[BankPuzzle]]:
     raw = json.loads(_DATA_PATH.read_text())
     return {
         difficulty: [
-            RacePuzzle(
+            BankPuzzle(
                 id=p["id"],
                 board=Board(cells=p["cells"]),
                 solution=Board(cells=p["solution"]),
@@ -47,5 +48,9 @@ def _load() -> dict[str, list[RacePuzzle]]:
 _PUZZLES_BY_DIFFICULTY = _load()
 
 
-def get_race_puzzles(difficulty: Difficulty) -> list[RacePuzzle]:
+def get_puzzles(difficulty: Difficulty) -> list[BankPuzzle]:
     return _PUZZLES_BY_DIFFICULTY[difficulty]
+
+
+def get_random_puzzle(difficulty: Difficulty) -> BankPuzzle:
+    return random.choice(_PUZZLES_BY_DIFFICULTY[difficulty])

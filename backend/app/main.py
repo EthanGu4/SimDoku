@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import board_router, puzzles_router, race_router, solve_router
+from app.api import board_router, puzzles_router, solve_router
 
 app = FastAPI(title="SimDoku API")
 
@@ -14,7 +14,6 @@ app.add_middleware(
 
 app.include_router(solve_router)
 app.include_router(puzzles_router)
-app.include_router(race_router)
 app.include_router(board_router)
 
 

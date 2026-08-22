@@ -1,8 +1,7 @@
-"""Wall-clock-capped solving. Used both by scripts/import_race_puzzles.py
-(to filter out pathologically slow candidates when curating the dataset)
-and by race mode itself (so one slow algorithm — simulated annealing on a
-sparse puzzle can take seconds; the neural net can spin on a dead end —
-can never stall a whole race).
+"""Wall-clock-capped solving. Used by the dev-time scripts that curate the
+puzzle bank and train the algorithm picker, so one pathologically slow
+puzzle (simulated annealing on a sparse board can take seconds; plain
+backtracking occasionally takes minutes) can never stall a whole run.
 
 Python can't forcibly kill a thread, so a solve that blows the cap just
 gets abandoned as an orphaned daemon thread; the caller moves on without

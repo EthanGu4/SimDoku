@@ -1,10 +1,10 @@
 import { useState } from "react";
 import "./App.css";
 import { AlgorithmInfoPanel } from "./components/AlgorithmInfoPanel";
-import { RaceMode } from "./components/RaceMode";
+import { ComparePage } from "./components/ComparePage";
 import { SolvePage } from "./components/SolvePage";
 
-type View = "solve" | "race";
+type View = "solve" | "compare";
 
 function App() {
   const [view, setView] = useState<View>("solve");
@@ -35,15 +35,15 @@ function App() {
           </button>
           <button
             type="button"
-            className={view === "race" ? "active" : ""}
-            onClick={() => setView("race")}
+            className={view === "compare" ? "active" : ""}
+            onClick={() => setView("compare")}
           >
-            Race
+            Compare
           </button>
         </nav>
       </header>
 
-      {view === "solve" ? <SolvePage /> : <RaceMode />}
+      {view === "solve" ? <SolvePage /> : <ComparePage />}
 
       {showAlgoInfo && <AlgorithmInfoPanel onClose={() => setShowAlgoInfo(false)} />}
     </>

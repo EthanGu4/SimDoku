@@ -6,9 +6,19 @@ const SPEED_OPTIONS = [1, 2, 5, 10, 20, 40];
 interface PlaybackControlsProps {
   state: PlaybackState;
   dispatch: (action: PlaybackAction) => void;
+  /** Overrides the default "Step X / Y" readout. The compare view drives a
+   * normalized 0-100 timeline rather than one solver's real steps, so those
+   * numbers would be meaningless there. */
+  progressLabel?: string;
+  formatSpeed?: (speed: number) => string;
 }
 
-export function PlaybackControls({ state, dispatch }: PlaybackControlsProps) {
+export function PlaybackControls({
+  state,
+  dispatch,
+  progressLabel,
+  formatSpeed,
+}: PlaybackControlsProps) {
   const atStart = state.stepIndex === 0;
   const atEnd = state.stepIndex >= state.totalSteps;
 
@@ -53,7 +63,7 @@ export function PlaybackControls({ state, dispatch }: PlaybackControlsProps) {
 
       <div className="playback-meta">
         <span>
-          Step {state.stepIndex} / {state.totalSteps}
+          {progressLabel ?? `Step ${state.stepIndex} / ${state.totalSteps}`}
         </span>
         <label>
           Speed
@@ -63,7 +73,7 @@ export function PlaybackControls({ state, dispatch }: PlaybackControlsProps) {
           >
             {SPEED_OPTIONS.map((speed) => (
               <option key={speed} value={speed}>
-                {speed}/s
+                {formatSpeed ? formatSpeed(speed) : `${speed}/s`}
               </option>
             ))}
           </select>

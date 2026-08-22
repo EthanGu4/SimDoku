@@ -11,8 +11,4 @@ export type SolveResult = Omit<GeneratedResult, "steps"> & { steps: SolveStep[] 
 export type SolveStats = GeneratedResult["stats"];
 export type BoardCells = number[][];
 
-export type BenchmarkPuzzle = components["schemas"]["BenchmarkPuzzle"];
-
-export type RaceRunResult = components["schemas"]["RaceRunResult"];
-export type AlgorithmProgress = components["schemas"]["AlgorithmProgress"];
-export type StartRaceResponse = components["schemas"]["StartRaceResponse"];
+export type BankPuzzle = components["schemas"]["BankPuzzle"];

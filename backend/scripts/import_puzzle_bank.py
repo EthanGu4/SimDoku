@@ -1,25 +1,25 @@
 """One-time import: pulls graded puzzles from grantm/sudoku-exchange-puzzle-
 bank (public domain, https://github.com/grantm/sudoku-exchange-puzzle-bank)
 and writes a trimmed, solved, self-contained fixture to
-app/core/data/race_puzzles.json. Race mode reads only that committed file —
+app/core/data/puzzle_bank.json. The app reads only that committed file —
 no network access at request time, same "eager-compute, no live external
 calls" philosophy as the rest of this app.
 
 The source files have no solutions, so this script solves each candidate
-puzzle itself (via BacktrackingSolver) and stores the solution alongside it
-— both so race mode never needs to re-derive it, and so tests can cross-
+puzzle itself (via BacktrackingSolver) and stores the solution alongside it,
+both so nothing downstream needs to re-derive it, and so tests can cross-
 check every algorithm's output against a known-correct answer.
 
 Plain backtracking has no completeness guarantee on *time* — a handful of
 puzzles in the harder buckets take minutes, not milliseconds, for MRV
 backtracking to crack (one in the "hard" bucket ran over 3 minutes before
-being killed during dataset curation). Since race mode's whole point is a
-fast, satisfying batch run, every candidate is solved with a hard wall-clock
-cap here at import time; anything that blows the cap is skipped in favor of
-the next candidate, so the shipped fixture can never stall a race.
+being killed during dataset curation). Every candidate is therefore solved
+with a hard wall-clock cap here at import time; anything that blows the cap
+is skipped in favor of the next candidate, so no puzzle that ships can
+stall the app later.
 
 Usage (from backend/, with the venv active):
-    python -m scripts.import_race_puzzles
+    python -m scripts.import_puzzle_bank
 """
 
 import json
@@ -38,7 +38,7 @@ DIFFICULTIES = ("easy", "medium", "hard")
 PUZZLES_PER_DIFFICULTY = 100
 CANDIDATE_LINES = 2000  # read this many lines per bucket, in case some get skipped
 SOLVE_TIME_CAP_SECONDS = 0.5
-OUT_PATH = Path(__file__).resolve().parent.parent / "app" / "core" / "data" / "race_puzzles.json"
+OUT_PATH = Path(__file__).resolve().parent.parent / "app" / "core" / "data" / "puzzle_bank.json"
 
 
 def parse_line(line: str) -> tuple[str, list[list[int]], float]:
