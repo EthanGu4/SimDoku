@@ -104,6 +104,24 @@ export const ALGORITHM_INFO: Record<string, AlgorithmInfo> = {
     history:
       "Introduced by Kirkpatrick, Gelatt & Vecchi in 1983, inspired by annealing metal: heating it, then cooling slowly so it settles into a low-energy crystalline state.",
   },
+  genetic: {
+    title: "Genetic Algorithm",
+    animation: "genetic",
+    summary:
+      "Treats a grid as an organism. It breeds a population of candidate grids, scoring each by how many row and column conflicts it has, keeping the fittest, and making children that inherit whole 3x3 boxes from two parents with the odd digit swapped at random.",
+    pros: [
+      "Needs no Sudoku knowledge beyond a way to score a grid",
+      "The same recipe works on scheduling, routing, and design problems",
+      "Boxes stay valid by construction, so it only ever fights rows and columns",
+    ],
+    cons: [
+      "Almost never actually finishes a puzzle, even an easy one",
+      "Stalls a few digits short, where every single mutation scores worse",
+      "Crossover assumes good pieces combine into a good whole, which Sudoku does not reward",
+    ],
+    history:
+      "Evolutionary computation dates to the 1960s and 70s, popularized by John Holland. Sudoku is a favorite demonstration of it and also a good demonstration of its limits, since the puzzle has exactly one right answer and almost-right grids give evolution nothing useful to climb.",
+  },
   neural_net: {
     title: "Neural Net",
     animation: "neural-net",

@@ -168,6 +168,54 @@
   }
 }
 
+/* Genetic: cells settle in clumps rather than one at a time, since a child
+   inherits whole boxes at once, and one cell keeps flipping without ever
+   committing, standing in for the local optimum it never escapes. */
+.mini-grid-genetic .mini-cell {
+  animation: mg-inherit 3.2s steps(1, end) infinite;
+  animation-delay: calc((var(--i) - var(--i) % 3) * 0.28s);
+}
+
+.mini-grid-genetic .mini-cell:nth-child(5) {
+  animation-name: mg-never-settles;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0s;
+}
+
+@keyframes mg-inherit {
+  0%,
+  18% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+  30%,
+  88% {
+    background: var(--positive-bg);
+    box-shadow: inset 0 0 0 1px var(--positive);
+  }
+  96%,
+  100% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+}
+
+@keyframes mg-never-settles {
+  0%,
+  100% {
+    background: var(--code-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+  25% {
+    background: var(--danger-bg);
+    box-shadow: inset 0 0 0 1px var(--danger);
+  }
+  60% {
+    background: var(--warn-bg);
+    box-shadow: inset 0 0 0 1px var(--warn);
+  }
+}
+
 /* Fish patterns: the four corners of a rectangle light up together, which
    is literally the shape an X-Wing keys off, then the cells they rule out
    along those two columns fade away. */

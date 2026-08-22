@@ -7,7 +7,8 @@ export type MiniGridVariant =
   | "simulated-annealing"
   | "neural-net"
   | "algorithm-picker"
-  | "fish-patterns";
+  | "fish-patterns"
+  | "genetic";
 
 interface MiniGridProps {
   variant: MiniGridVariant;

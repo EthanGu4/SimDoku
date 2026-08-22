@@ -11,6 +11,7 @@ from app.solvers import (  # noqa: F401
     constraint_propagation,
     dancing_links,
     fish_patterns,
+    genetic,
     simulated_annealing,
 )
 from app.solvers.base import get_solver, list_solvers, register
