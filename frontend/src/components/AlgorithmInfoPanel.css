@@ -56,7 +56,6 @@
 .algo-panel-tabs button.active {
   border-color: var(--accent-border);
   color: var(--accent);
-  font-weight: 600;
 }
 
 .algo-panel-body h3 {

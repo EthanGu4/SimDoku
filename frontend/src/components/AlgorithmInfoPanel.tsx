@@ -8,25 +8,29 @@ interface AlgorithmInfoPanelProps {
   onClose: () => void;
 }
 
+// Tab order always follows this file's declaration order, never whatever
+// order the backend happens to return — the registry list is only ever
+// used below to drop a tab for something that isn't actually registered,
+// never to reorder. Otherwise the tabs visibly reshuffle the moment that
+// fetch resolves (it returns algorithms alphabetically).
+const ORDERED_ALGORITHMS = Object.keys(ALGORITHM_INFO);
+
 /** Self-sufficient: fetches its own algorithm list, so it can be triggered
  * from anywhere in the app (the header menu) without any page needing to
  * hand it state. */
 export function AlgorithmInfoPanel({ onClose }: AlgorithmInfoPanelProps) {
-  const [knownAlgorithms, setKnownAlgorithms] = useState<string[]>(
-    Object.keys(ALGORITHM_INFO),
-  );
-  const [activeTab, setActiveTab] = useState(knownAlgorithms[0] ?? "");
+  const [registeredAlgorithms, setRegisteredAlgorithms] = useState<string[] | null>(null);
+  const [activeTab, setActiveTab] = useState(ORDERED_ALGORITHMS[0] ?? "");
 
   useEffect(() => {
     api.GET("/solve/algorithms").then(({ data }) => {
-      if (!data) return;
-      const known = data.filter((name) => ALGORITHM_INFO[name]);
-      if (known.length > 0) {
-        setKnownAlgorithms(known);
-        setActiveTab(known[0]);
-      }
+      if (data) setRegisteredAlgorithms(data);
     });
   }, []);
+
+  const knownAlgorithms = registeredAlgorithms
+    ? ORDERED_ALGORITHMS.filter((name) => registeredAlgorithms.includes(name))
+    : ORDERED_ALGORITHMS;
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
