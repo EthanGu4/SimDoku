@@ -94,6 +94,8 @@ docker build -t simdoku .
 docker run -p 8000:8000 simdoku
 ```
 
+https://simdoku.onrender.com/
+
 It honors `$PORT` if the host sets one, so it should run as-is on Render,
 Railway, Fly.io, or Cloud Run. Expect a large image, since torch and OpenCV
 dominate it. If you ever host the frontend separately, point it at the API with
