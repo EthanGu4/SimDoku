@@ -23,7 +23,16 @@ class AlgorithmPickerSolver:
     name = "algorithm_picker"
 
     def __init__(self) -> None:
-        self.model = joblib.load(WEIGHTS_PATH)
+        self._model = None
+
+    @property
+    def model(self):
+        """Loaded on first solve, for the same reason as the neural solver:
+        its training script imports the registry, so loading at construction
+        would mean the run had to load the model it was about to overwrite."""
+        if self._model is None:
+            self._model = joblib.load(WEIGHTS_PATH)
+        return self._model
 
     def solve(self, board: Board) -> SolveResult:
         features = extract_features(board.cells)

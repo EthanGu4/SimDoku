@@ -43,7 +43,7 @@ pros, cons, a little history, and a small animation of how it behaves.
 | Dancing Links | Exact cover via Knuth's Algorithm X | Yes |
 | Simulated annealing | Stochastic local search over whole grids | No |
 | Genetic | Evolves a population of grids by crossover and mutation | Rarely |
-| Neural net | Small CNN placing its most confident digit each round | No |
+| Neural net | CNN placing its most confident legal digit each round | No (71% of easy) |
 | Algorithm picker | Predicts the fastest complete solver and delegates | Yes |
 
 The ones that fail are there on purpose. A solver that stalls is far more
@@ -106,7 +106,8 @@ The trained models and the puzzle dataset are committed, so none of this is
 needed just to run the app. From `backend/` with the venv active:
 
 ```
-python -m scripts.train_neural_solver      # retrain the CNN on self-generated puzzles
+python -m scripts.train_neural_solver      # retrain the CNN on real puzzles
+python -m scripts.eval_neural_solver       # measure its solve rate on unseen puzzles
 python -m scripts.train_algorithm_picker   # retime every puzzle and refit the picker
 python -m scripts.import_puzzle_bank       # re-download the graded puzzle bank
 ```

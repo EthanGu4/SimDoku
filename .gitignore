@@ -5,6 +5,7 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 backend/openapi.json
+backend/scripts/.puzzle_cache/
 backend/static/
 frontend/dist/
 

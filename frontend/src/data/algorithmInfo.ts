@@ -126,19 +126,19 @@ export const ALGORITHM_INFO: Record<string, AlgorithmInfo> = {
     title: "Neural Net",
     animation: "neural-net",
     summary:
-      "A small CNN trained on synthetic puzzles predicts a probability distribution over digits 1-9 for every empty cell. Each round, it places whichever cell and digit it's most confident about, checked against Sudoku's rules first, and repeats on the updated board.",
+      "A small CNN trained on 21,000 real puzzles predicts a probability distribution over digits 1-9 for every empty cell. Each round it places whichever cell and digit it's most confident about, checked against Sudoku's rules first, and repeats on the updated board. Its layers look along whole rows and columns rather than in small squares, matching the shape of Sudoku's constraints.",
     pros: [
       "No hand-written solving rules; the strategy is entirely learned",
-      "Every placement it makes is still rule-checked, so it never corrupts the board",
+      "Solves about 7 in 10 unseen easy puzzles and 4 in 10 medium ones",
       "Fast per step: one small forward pass, no search tree",
     ],
     cons: [
-      "No backtracking, so a confident-but-wrong early guess can dead-end it",
-      "Not complete, like simulated annealing, so it can get stuck and stop early",
-      "Only as good as its small, synthetic training data",
+      "No backtracking, so one confident mistake can dead-end the whole board",
+      "Not complete: it stops when a cell runs out of legal digits",
+      "Falls off sharply as puzzles get harder, solving only about 1 in 7 hard ones",
     ],
     history:
-      "Convolutional neural nets for Sudoku are a popular deep-learning demo project, and a good illustration that a model with zero hard-coded rules can still learn a lot of Sudoku's structure purely from solved examples.",
+      "Convolutional nets for Sudoku are a popular deep-learning demo, and a good illustration that a model with zero hard-coded rules can learn a lot of the puzzle's structure from solved examples alone, while still lacking the one thing search gives you for free: the ability to undo a mistake.",
   },
   algorithm_picker: {
     title: "Algorithm Picker",

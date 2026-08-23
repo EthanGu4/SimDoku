@@ -18,9 +18,13 @@ import time
 
 import torch
 
-from app.core import Board, SolveResult, SolveStats, SolveStep, is_complete, is_valid_placement
-from app.core.schemas import GRID_SIZE
-from app.ml.sudoku_cnn import WEIGHTS_PATH, SudokuCNN, encode_board
+from app.core import Board, SolveResult, SolveStats, SolveStep, is_complete
+from app.ml.sudoku_cnn import (
+    WEIGHTS_PATH,
+    SudokuCNN,
+    most_confident_valid_placement,
+    predict,
+)
 from app.solvers.base import register
 
 
@@ -28,10 +32,25 @@ class NeuralSolver:
     name = "neural_net"
 
     def __init__(self) -> None:
-        self.model = SudokuCNN()
-        state = torch.load(WEIGHTS_PATH, map_location="cpu")
-        self.model.load_state_dict(state)
-        self.model.eval()
+        self._model: SudokuCNN | None = None
+
+    @property
+    def model(self) -> SudokuCNN:
+        """Weights load on first solve rather than at import.
+
+        Eager loading made the model impossible to retrain: the training
+        script imports another solver, that pulls in the whole registry,
+        and constructing this class then tried to load the very weights
+        file the run was about to replace, failing outright whenever the
+        architecture had changed. Deferring it also means a missing or
+        corrupt weights file degrades this one algorithm at call time
+        instead of stopping the entire app from starting."""
+        if self._model is None:
+            model = SudokuCNN()
+            model.load_state_dict(torch.load(WEIGHTS_PATH, map_location="cpu"))
+            model.eval()
+            self._model = model
+        return self._model
 
     def solve(self, board: Board) -> SolveResult:
         cells = [row[:] for row in board.cells]
@@ -56,8 +75,8 @@ class NeuralSolver:
 
     def _solve(self, cells: list[list[int]], steps: list[SolveStep]) -> bool:
         while not is_complete(cells):
-            probs = self._predict(cells)
-            best = self._most_confident_valid_placement(cells, probs)
+            probs = predict(self.model, cells)
+            best = most_confident_valid_placement(cells, probs)
             if best is None:
                 return False  # some empty cell has no legal digit left — dead end
 
@@ -72,30 +91,6 @@ class NeuralSolver:
                 )
             )
         return True
-
-    def _predict(self, cells: list[list[int]]) -> torch.Tensor:
-        with torch.no_grad():
-            x = encode_board(cells).unsqueeze(0)
-            logits = self.model(x)[0]
-            return torch.softmax(logits, dim=0)
-
-    @staticmethod
-    def _most_confident_valid_placement(
-        cells: list[list[int]], probs: torch.Tensor
-    ) -> tuple[float, int, int, int] | None:
-        best: tuple[float, int, int, int] | None = None
-        for row in range(GRID_SIZE):
-            for col in range(GRID_SIZE):
-                if cells[row][col] != 0:
-                    continue
-                for digit in torch.argsort(probs[:, row, col], descending=True).tolist():
-                    value = digit + 1
-                    if is_valid_placement(cells, row, col, value):
-                        confidence = probs[digit, row, col].item()
-                        if best is None or confidence > best[0]:
-                            best = (confidence, row, col, value)
-                        break
-        return best
 
 
 register(NeuralSolver())
